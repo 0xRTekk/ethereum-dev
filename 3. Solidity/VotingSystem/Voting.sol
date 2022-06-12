@@ -8,21 +8,21 @@ contract Voting is Ownable {
 
   // == Variables ==
   struct Voter {
-      bool isRegistered;
-      bool hasVoted;
-      uint votedProposalId;
+    bool isRegistered;
+    bool hasVoted;
+    uint votedProposalId;
   }
   struct Proposal {
-      string description;
-      uint voteCount;
+    string description;
+    uint voteCount;
   }
   enum WorkflowStatus {
-      RegisteringVoters,
-      ProposalsRegistrationStarted,
-      ProposalsRegistrationEnded,
-      VotingSessionStarted,
-      VotingSessionEnded,
-      VotesTallied
+    RegisteringVoters,
+    ProposalsRegistrationStarted,
+    ProposalsRegistrationEnded,
+    VotingSessionStarted,
+    VotingSessionEnded,
+    VotesTallied
   }
   // La valeur par défaut sera le premier élément de l'énumération => workflowStatus = WorkflowStatus.RegisteringVoters
   // public pour avoir un getter automatiquement : pratique pour voir sur quelle phase on se trouve
@@ -52,6 +52,30 @@ contract Voting is Ownable {
     );
     _;
   }
+  modifier onlyVoter() {
+    // Dans notre mapping whitelist, toutes les adresses existent par defaut.
+    // On s'assure donc que la personne qui call la function ait bien été enregistré dans la whitelist par l'amdin
+    require(
+        whitelist[msg.sender].isRegistered == true,
+        unicode"Vous n'êtes pas sur la liste des électeurs"
+    );
+    _;
+  }
+  modifier onlyProposalsRegistrationStarted() {
+    require(
+        workflowStatus == WorkflowStatus.ProposalsRegistrationStarted,
+        unicode"Il faut être en phase d'enregistrement de propositions"
+    );
+    _;
+  }
+  modifier onlyValidString(string calldata _string) {
+    // Pour comparer des strings entre elles on doit les hasher puis comparer leur hash
+    require(
+      keccak256(abi.encode(_string)) != keccak256(abi.encode("")),
+      "Veuillez entrer une phrase correcte"
+    );
+    _;
+  }
 
   // == Constructor
 
@@ -76,5 +100,16 @@ contract Voting is Ownable {
     whitelist[_addr] = Voter(true, false, 0);
     emit VoterRegistered(_addr);
     return whitelist[_addr];
+  }
+
+  // === Proposals functions ===
+  function addProposal(string calldata _description)
+    external
+    onlyVoter
+    onlyProposalsRegistrationStarted
+    onlyValidString(_description)
+  {
+    proposals.push(Proposal(_description, 0));
+    emit ProposalRegistered(proposals.length-1);
   }
 }
