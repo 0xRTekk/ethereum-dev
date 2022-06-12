@@ -34,3 +34,15 @@ Voici le déroulement de l'ensemble du processus de vote :
   - Voter pour une seule proposition uniquement pendant la phase de vote
   - Voir la proposition votée par les autres électeurs uniquement pendant la phase de dépouillage
   - Voir la proposition gagnante uniquement pendant la phase de dépouillage
+
+### Améliorations possibles
+
+[ ] Ressoritr le taux de vote et le taux d'absenteissme
+
+[ ] Relancer une session
+
+[ ] Gérer l'exequo
+
+[ ] Indentations de 4
+
+[ ] Faire des fichiers pour les modifiers
