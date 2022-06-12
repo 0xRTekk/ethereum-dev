@@ -2,6 +2,8 @@
 
 pragma solidity 0.8.14;
 
-contract Voting {
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+contract Voting is Ownable {
 
 }
