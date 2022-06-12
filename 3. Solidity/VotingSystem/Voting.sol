@@ -113,7 +113,7 @@ contract Voting is Ownable {
   }
   modifier onlyVotingSessionEnded() {
     require(
-      uint(workflowStatus) >= uint(WorkflowStatus.VotingSessionEnded) && uint(workflowStatusuint) <= uint(WorkflowStatus.VotesTallied),
+      uint(workflowStatus) >= uint(WorkflowStatus.VotingSessionEnded) && uint(workflowStatus) <= uint(WorkflowStatus.VotesTallied),
       unicode"Il faut attendre la fin de la phase de vote"
     );
     _;
