@@ -35,7 +35,7 @@ contract Voting is Ownable {
   event VoterRegistered(address voterAddress); 
   event WorkflowStatusChange(WorkflowStatus previousStatus, WorkflowStatus newStatus);
   event ProposalRegistered(uint proposalId);
-  event Voted (address voter, uint proposalId);
+  event Voted(address voter, uint proposalId);
 
   // == Modifiers ==
   modifier onlyValidAddress(address _addr) {
@@ -76,6 +76,41 @@ contract Voting is Ownable {
     );
     _;
   }
+  modifier onlyVotingSessionStarted() {
+      require(
+          workflowStatus == WorkflowStatus.VotingSessionStarted,
+          unicode"Il faut être en phase de vote"
+      );
+      _;
+  }
+  modifier onlyNotVotedYet() {
+    require(
+      whitelist[address(msg.sender)].hasVoted == false,
+      unicode"Vous avez déjà voté !"
+    );
+    _;
+  }
+  modifier onlyValidProposalId(uint _id) {
+    require(
+      _id < proposals.length,
+      "Veuillez renseigner un id de proposition valide"
+    );
+    _;
+  }
+  modifier onlyNotAlreadyWhitelisted(address _addr) {
+    require(
+      whitelist[_addr].isRegistered == false,
+      unicode"L'électeur est déjà présent dans la whitelist"
+    );
+    _;
+  }
+  modifier onlyWhitelisted(address _addr) {
+    require(
+      whitelist[_addr].isRegistered == true,
+      unicode"L'électeur n'est pas dans la liste blanche"
+    );
+    _;
+  }
 
   // == Constructor
 
@@ -95,6 +130,7 @@ contract Voting is Ownable {
     onlyOwner
     onlyRegisteringVoters
     onlyValidAddress(_addr)
+    onlyNotAlreadyWhitelisted(_addr)
     returns (Voter memory)
   {
     whitelist[_addr] = Voter(true, false, 0);
@@ -111,5 +147,57 @@ contract Voting is Ownable {
   {
     proposals.push(Proposal(_description, 0));
     emit ProposalRegistered(proposals.length-1);
+  }
+
+  function getProposal(uint _id)
+    external
+    view
+    onlyValidProposalId
+    returns (Proposal memory)
+  {
+    return proposals[_id];
+  }
+
+
+  // === Voters & Voting functions ===
+  function getVoter(address _addr)
+    external
+    view
+    onlyWhitelisted(_addr)
+    returns (Voter memory)
+  {
+    return whitelist[_addr];
+  }
+
+  function vote(uint _idProposal)
+    external
+    onlyVoter
+    onlyVotingSessionStarted
+    onlyNotVotedYet
+    onlyValidProposalId(_idProposal)
+  {
+    proposals[_idProposal].voteCount++;
+    whitelist[address(msg.sender)].votedProposalId = _idProposal;
+    whitelist[address(msg.sender)].hasVoted = true;
+    emit Voted(address(msg.sender), _idProposal);
+  }
+
+  function getVoteOfVoter(address _addr) 
+    external
+    view
+    returns (Proposal memory)
+  {
+    // On s'assure d'être dans l'une des phases qui permet de checker les votes
+    // Le vote n'étant pas secret, je pars du principe que dès le début de la phase de vote les électeurs peuvent checker les votes des autres
+    require(
+      uint(workflowStatus) >= uint(WorkflowStatus.VotingSessionStarted) && uint(workflowStatus) <= uint(WorkflowStatus.VotesTallied),
+      unicode"Vous ne pouvez pas encore voir le vote de cet électeur"
+    );
+    // On s'assure que l'électeur a bien voté
+    require(
+      whitelist[_addr].isRegistered == true && whitelist[_addr].hasVoted == true,
+      unicode"L'électeur en question n'a pas voté" 
+    );
+    return proposals[whitelist[_addr].votedProposalId];
   }
 }
