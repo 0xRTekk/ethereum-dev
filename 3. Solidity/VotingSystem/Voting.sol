@@ -36,4 +36,45 @@ contract Voting is Ownable {
   event WorkflowStatusChange(WorkflowStatus previousStatus, WorkflowStatus newStatus);
   event ProposalRegistered(uint proposalId);
   event Voted (address voter, uint proposalId);
+
+  // == Modifiers ==
+  modifier onlyValidAddress(address _addr) {
+    require(
+      _addr != address(0),
+      "Il faut renseigner une adresse valide"
+    );
+    _;
+  }
+  modifier onlyRegisteringVoters() {
+    require(
+      workflowStatus == WorkflowStatus.RegisteringVoters,
+      unicode"Il faut être en phase d'enregistrement d'électeurs"
+    );
+    _;
+  }
+
+  // == Constructor
+
+  // == Functions ==
+  // === Admin functions ===
+  function changeWorkflowStatus(uint _id)
+    external
+    onlyOwner
+  {
+    require(_id < 6, "Il faut renseigner un ID correct");
+    emit WorkflowStatusChange(workflowStatus, WorkflowStatus(_id));
+    workflowStatus = WorkflowStatus(_id);
+  }
+
+  function addVoter(address _addr)
+    external
+    onlyOwner
+    onlyRegisteringVoters
+    onlyValidAddress(_addr)
+    returns (Voter memory)
+  {
+    whitelist[_addr] = Voter(true, false, 0);
+    emit VoterRegistered(_addr);
+    return whitelist[_addr];
+  }
 }
