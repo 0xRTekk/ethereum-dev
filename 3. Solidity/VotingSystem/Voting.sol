@@ -77,11 +77,11 @@ contract Voting is Ownable {
     _;
   }
   modifier onlyVotingSessionStarted() {
-      require(
-          workflowStatus == WorkflowStatus.VotingSessionStarted,
-          unicode"Il faut être en phase de vote"
-      );
-      _;
+    require(
+        workflowStatus == WorkflowStatus.VotingSessionStarted,
+        unicode"Il faut être en phase de vote"
+    );
+    _;
   }
   modifier onlyNotVotedYet() {
     require(
@@ -108,6 +108,13 @@ contract Voting is Ownable {
     require(
       whitelist[_addr].isRegistered == true,
       unicode"L'électeur n'est pas dans la liste blanche"
+    );
+    _;
+  }
+  modifier onlyVotingSessionEnded() {
+    require(
+      uint(workflowStatus) >= uint(WorkflowStatus.VotingSessionEnded) && uint(workflowStatusuint) <= uint(WorkflowStatus.VotesTallied),
+      unicode"Il faut attendre la fin de la phase de vote"
     );
     _;
   }
@@ -152,12 +159,11 @@ contract Voting is Ownable {
   function getProposal(uint _id)
     external
     view
-    onlyValidProposalId
+    onlyValidProposalId(_id)
     returns (Proposal memory)
   {
     return proposals[_id];
   }
-
 
   // === Voters & Voting functions ===
   function getVoter(address _addr)
@@ -199,5 +205,27 @@ contract Voting is Ownable {
       unicode"L'électeur en question n'a pas voté" 
     );
     return proposals[whitelist[_addr].votedProposalId];
+  }
+
+  // === Tallied functions ===
+  function determineWinner()
+    private
+  {
+    uint winningVoteCount = 0;
+    for (uint id = 0; id < proposals.length; id++) {
+        if (proposals[id].voteCount > winningVoteCount) {
+            winningVoteCount = proposals[id].voteCount;
+            winnigProposalId = id;
+        }
+    }
+  }
+
+  function getWinner()
+    external
+    onlyVotingSessionEnded
+    returns (Proposal memory)
+  {
+    determineWinner();
+    return proposals[winnigProposalId];
   }
 }
