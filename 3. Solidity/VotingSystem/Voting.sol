@@ -236,6 +236,7 @@ contract Voting is Ownable {
     function getVotingPercent()
       external
       view
+      onlyVotingSessionStarted
       returns (uint)
     {
       // nbVoters*100/nbWhitelisted permet d'avoir le pourcentage de vote
@@ -248,6 +249,7 @@ contract Voting is Ownable {
     function getAbsenteeismPercent()
       external
       view
+      onlyVotingSessionStarted
       returns (uint)
     {
       return ((nbWhitelisted - nbVoters)*100/nbWhitelisted)*100;
