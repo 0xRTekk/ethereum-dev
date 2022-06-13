@@ -37,12 +37,12 @@ Voici le déroulement de l'ensemble du processus de vote :
 
 ### Améliorations possibles
 
-[ ] Ressoritr le taux de vote et le taux d'absenteissme
+[x] Ressoritr le taux de vote et le taux d'absenteissme
 
 [ ] Relancer une session
 
 [ ] Gérer l'exequo
 
-[ ] Indentations de 4
+[x] Indentations de 4
 
 [ ] Faire des fichiers pour les modifiers

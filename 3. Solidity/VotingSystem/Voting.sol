@@ -28,6 +28,10 @@ contract Voting is Ownable {
     // public pour avoir un getter automatiquement : pratique pour voir sur quelle phase on se trouve
     WorkflowStatus public workflowStatus;
     mapping(address=>Voter) whitelist;
+    // Nb de Voters enregistrés
+    uint nbWhitelisted;
+    // Nb de Voters enregistrés qui ont votés. (On part du principe que certains électeurs enregistrés ne vont pas voter)
+    uint nbVoters;
     Proposal[] proposals;
     uint winnigProposalId;
 
@@ -139,6 +143,7 @@ contract Voting is Ownable {
         returns (Voter memory)
     {
         whitelist[_addr] = Voter(true, false, 0);
+        nbWhitelisted++;
         emit VoterRegistered(_addr);
         return whitelist[_addr];
     }
@@ -183,6 +188,7 @@ contract Voting is Ownable {
         proposals[_idProposal].voteCount++;
         whitelist[address(msg.sender)].votedProposalId = _idProposal;
         whitelist[address(msg.sender)].hasVoted = true;
+        nbVoters++;
         emit Voted(address(msg.sender), _idProposal);
     }
 
@@ -225,5 +231,25 @@ contract Voting is Ownable {
     {
         determineWinner();
         return proposals[winnigProposalId];
+    }
+
+    function getVotingPercent()
+      external
+      view
+      returns (uint)
+    {
+      // nbVoters*100/nbWhitelisted permet d'avoir le pourcentage de vote
+      // Soucis de division à virgule impossible en Solidity :
+      // On utilise un multiplicateur (dans notre cas : 100) pour rester précis sur notre pourcentage
+      // Sur notre FrontEnd, il faudra diviser d'autant pour retrouver le bon taux
+      return (nbVoters*100/nbWhitelisted)*100;
+    }
+
+    function getAbsenteeismPercent()
+      external
+      view
+      returns (uint)
+    {
+      return ((nbWhitelisted - nbVoters)*100/nbWhitelisted)*100;
     }
 }
