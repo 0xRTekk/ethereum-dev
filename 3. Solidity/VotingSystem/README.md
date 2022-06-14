@@ -39,10 +39,10 @@ Voici le déroulement de l'ensemble du processus de vote :
 
 [x] Ressoritr le taux de vote et le taux d'absenteissme
 
-[ ] Relancer une session
+[x] Remise à zéro du vote / Relancer une session
 
 [ ] Gérer l'exequo
 
 [x] Indentations de 4
 
-[ ] Faire des fichiers pour les modifiers
+[ ] Faire une librairie perso pour les modifiers

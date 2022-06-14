@@ -28,10 +28,8 @@ contract Voting is Ownable {
     // public pour avoir un getter automatiquement : pratique pour voir sur quelle phase on se trouve
     WorkflowStatus public workflowStatus;
     mapping(address=>Voter) whitelist;
-    // Nb de Voters enregistrés
-    uint nbWhitelisted;
-    // Nb de Voters enregistrés qui ont votés. (On part du principe que certains électeurs enregistrés ne vont pas voter)
-    uint nbVoters;
+    // Un tableau contenant les adrresses des voters enregistrés
+    address[] whitelistedAddr;
     Proposal[] proposals;
     uint winnigProposalId;
 
@@ -40,6 +38,7 @@ contract Voting is Ownable {
     event WorkflowStatusChange(WorkflowStatus previousStatus, WorkflowStatus newStatus);
     event ProposalRegistered(uint proposalId);
     event Voted(address voter, uint proposalId);
+    event Reset(uint timestamp);
 
     // == Modifiers ==
     modifier onlyValidAddress(address _addr) {
@@ -143,9 +142,42 @@ contract Voting is Ownable {
         returns (Voter memory)
     {
         whitelist[_addr] = Voter(true, false, 0);
-        nbWhitelisted++;
+        whitelistedAddr.push(_addr);
         emit VoterRegistered(_addr);
         return whitelist[_addr];
+    }
+
+    /*
+    Plusieurs choix ici:
+    Soit on laisse la liberté à l'admin de reset le vote à tout moment (au cas où Kim Jong Un, ou autre divinité suprême, viendrait lui demander)
+    Soit on fait en sorte que lorsque le processus de vote commencé : impossible de relancer un nouveau sans avoir terminé celui ci
+        => Pour ça il faudrait rajouter un require / modifier qui s'assure qu'on est en phase de dépouillage 
+
+    Mais bon... L'hypothèse Kim Jong Un me semble hautement plus probable....
+    On va laisser comme ça !
+    */
+    function reset()
+        external
+        onlyOwner
+    {
+        // On doit wipe la whitelist : isRegistered = false pour les adresses qu'on a rajouté en utilisant delete whitelist[addr]
+        for (uint i = 0; i < whitelistedAddr.length; i++) {
+            delete whitelist[whitelistedAddr[i]];
+        }
+        // On wipe les tableaux contenant les adresses des whitelisted & les proposition
+        // delete array ==> array = []
+        delete whitelistedAddr;
+        delete proposals;
+        // Wipe nbVoters & nbWhitelisted & WinningProposalId
+        // nbVoters = 0;
+        // nbWhitelisted = 0;
+        winnigProposalId = 0;
+        // On rebascule sur la phase d'enregistrement de Voters
+        WorkflowStatus oldWorkflowStatus = WorkflowStatus(workflowStatus);
+        workflowStatus = WorkflowStatus.RegisteringVoters;
+        // => En emit WorkflowStatusChange & VotingSystemReset
+        emit WorkflowStatusChange(oldWorkflowStatus, workflowStatus);
+        emit Reset(block.timestamp);
     }
 
     // === Proposals functions ===
@@ -188,7 +220,6 @@ contract Voting is Ownable {
         proposals[_idProposal].voteCount++;
         whitelist[address(msg.sender)].votedProposalId = _idProposal;
         whitelist[address(msg.sender)].hasVoted = true;
-        nbVoters++;
         emit Voted(address(msg.sender), _idProposal);
     }
 
@@ -234,24 +265,41 @@ contract Voting is Ownable {
     }
 
     function getVotingPercent()
-      external
-      view
-      onlyVotingSessionStarted
-      returns (uint)
+        external
+        view
+        returns (uint)
     {
-      // nbVoters*100/nbWhitelisted permet d'avoir le pourcentage de vote
-      // Soucis de division à virgule impossible en Solidity :
-      // On utilise un multiplicateur (dans notre cas : 100) pour rester précis sur notre pourcentage
-      // Sur notre FrontEnd, il faudra diviser d'autant pour retrouver le bon taux
-      return (nbVoters*100/nbWhitelisted)*100;
+        uint nbVoters = getNbVoters();  
+        // nbVoters*100/nbWhitelisted permet d'avoir le pourcentage de vote
+        // Soucis de division à virgule impossible en Solidity :
+        // On utilise un multiplicateur (dans notre cas : 100) pour rester précis sur notre pourcentage
+        // Sur notre FrontEnd, il faudra diviser d'autant pour retrouver le bon taux
+        return (nbVoters*100/whitelistedAddr.length)*100;
     }
 
     function getAbsenteeismPercent()
-      external
-      view
-      onlyVotingSessionStarted
-      returns (uint)
+        external
+        view
+        onlyVotingSessionStarted
+        returns (uint)
     {
-      return ((nbWhitelisted - nbVoters)*100/nbWhitelisted)*100;
+        uint nbVoters = getNbVoters();
+        return ((whitelistedAddr.length - nbVoters)*100/whitelistedAddr.length)*100;
+    }
+
+    function getNbVoters()
+        private
+        view
+        returns (uint)
+    {
+        // On recup le nb de Voters enregistrés qui ont votés.
+        // (On part du principe que certains électeurs enregistrés ne vont pas voter)
+        uint nbVoters;
+        for (uint i = 0; i < whitelistedAddr.length; i++) {
+            if (whitelist[whitelistedAddr[i]].hasVoted == true) {
+                nbVoters++;
+            }
+        }
+        return nbVoters;
     }
 }
