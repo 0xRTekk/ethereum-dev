@@ -168,14 +168,14 @@ contract Voting is Ownable {
         // delete array ==> array = []
         delete whitelistedAddr;
         delete proposals;
-        // Wipe nbVoters & nbWhitelisted & WinningProposalId
-        // nbVoters = 0;
-        // nbWhitelisted = 0;
-        winnigProposalId = 0;
+        // Wipe WinningProposalId
+        if (winnigProposalId == 0) {
+            winnigProposalId = 0;
+        }
         // On rebascule sur la phase d'enregistrement de Voters
         WorkflowStatus oldWorkflowStatus = WorkflowStatus(workflowStatus);
         workflowStatus = WorkflowStatus.RegisteringVoters;
-        // => En emit WorkflowStatusChange & VotingSystemReset
+        // => On emit WorkflowStatusChange & VotingSystemReset
         emit WorkflowStatusChange(oldWorkflowStatus, workflowStatus);
         emit Reset(block.timestamp);
     }
@@ -246,7 +246,7 @@ contract Voting is Ownable {
     function determineWinner()
         private
     {
-        uint winningVoteCount = 0;
+        uint winningVoteCount;
         for (uint id = 0; id < proposals.length; id++) {
             if (proposals[id].voteCount > winningVoteCount) {
                 winningVoteCount = proposals[id].voteCount;
