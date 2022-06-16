@@ -17,6 +17,7 @@ truffle compile
 truffle deploy
 
 ## Compile & déploie
+# Par default, sans le paramètre --network, truffle va deployer sur le premier réseau renseigné sur le fichier de config (ici développement) 
 truffle migrate
 
 # il se peut qu'une action bloque et fait des erreurs. On peut reset pour refaire propre
