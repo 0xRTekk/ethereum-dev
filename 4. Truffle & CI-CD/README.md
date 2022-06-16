@@ -4,6 +4,8 @@ Framework de développement Solidity. Outils pour faire des tests et déployer
 
 ## Commandes utiles
 
+https://trufflesuite.com/docs/truffle/getting-started/running-migrations/
+
 ```bash
 # Initialise un projet truffle
 truffle init 
@@ -39,6 +41,8 @@ truffle migrate --network dashboard
 Pour pouvoir intéragir avec les réseaux (testnet ou mainnet), il faut utiliser des providers
 
 ### Infura - node provider
+
+https://infura.io/dashboard
 
 Service centralisé. C'est un délégateur de noeud grâce auquel on peut rejoindre le réseaux Ethereum sans avoir à lancer un noeud perso.
 
