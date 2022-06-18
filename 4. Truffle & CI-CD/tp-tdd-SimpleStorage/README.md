@@ -12,3 +12,17 @@
    5. ***GITIGNORE !!!!***
 4. On adapte les scripts
 5. Création fichier test `truffle create test SimpleStorage`
+
+## Notes
+
+Truffle utilise les librairies Mocha et Chai pour effectuer les tests.
+
+Mocha est le moteur de test et Chai est la lib d'assertions (contient les fonctions de tests).
+
+[Ecrire les tests en JS avec Mocha](https://trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript/)
+
+[Les options de configuration de Mocha - à faire dans le fichier `truffle-config.js`](https://mochajs.org/api/mocha)
+
+[Une customisation indispensable](https://mochajs.org/#reporters)
+
+[La liste des fonctions d'assertion de Chai](https://www.chaijs.com/api/assert/#method_assert)

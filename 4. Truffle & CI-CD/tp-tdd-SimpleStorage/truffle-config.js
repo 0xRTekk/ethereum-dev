@@ -17,8 +17,13 @@ module.exports = {
   },
 
   // Set default mocha options here, use special reporters, etc.
+  // https://mochajs.org/api/mocha
+  // https://mochajs.org/#reporters
   mocha: {
-    // timeout: 100000
+    // timeout: 100000*
+    useColors: true,
+    // https://mochajs.org/#nyan
+    reporter: "nyan",
   },
 
   // Configure your compilers
