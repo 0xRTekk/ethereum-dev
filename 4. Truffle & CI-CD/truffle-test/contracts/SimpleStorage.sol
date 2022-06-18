@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.14;
+
+// Les contrats openzeppelin ont étés installés via npm
+import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
+
+pragma solidity 0.8.15;
  
 contract SimpleStorage {
     uint data;
