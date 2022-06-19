@@ -81,4 +81,36 @@ contract('Erc20Token', (accounts) => {
     const allowanceSpenderAfterApprove = await this.ERC20Instance.allowance(owner, spender);
     expect(allowanceSpenderAfterApprove).to.be.bignumber.equal(amount);
   });
+
+  it('vérifie si un tranfer from est bien effectué', async function() {
+    /*
+      notes: 
+      La fonction tranferFrom() permet au spender d'envoyer des tokens depuis l'adresse de l'owner vers une nouvelle adresse
+      Pour ça il faut que le spender soit autorisé à bouger les fonds de l'addr de l'owner => mapping (owner => (spender => amount))
+      Si allowance(owner, spender) nous renvoie autre que 0 => C'est qu'il y a un motant autorisé par l'owner a être bougé de son addr par une action du spender
+
+      étapes:
+      On recup les balances de l'owner et du recipient avant tranfert
+      On définit un montant de transfert
+      On autorise le spender à pouvoir bouger ce montant de l'owner vers le recipient
+      On fait le transfert
+      On verif que la balance de l'owner ait bien été débité du montant
+      On verif que la balance du recipient ait bien été crédité du montant
+    */
+
+    const ownersBalanceBeforeTransfer = await this.ERC20Instance.balanceOf(owner);
+    const recipientsBalanceBeforeTransfer = await this.ERC20Instance.balanceOf(recipient);
+    const amount = new BN(10);
+    await this.ERC20Instance.approve(spender, amount, {from:owner});
+    await this.ERC20Instance.transferFrom(owner, recipient, amount, {from: spender});
+    const ownersBalanceAfterTransfer = await this.ERC20Instance.balanceOf(owner);
+    const recipientsBalanceAfterTransfer = await this.ERC20Instance.balanceOf(recipient);
+
+    //! Truffle installe par défaut un plugin de chai qui nous permet de manipuler les bignumber
+    // https://www.chaijs.com/plugins/chai-bignumber/
+    //! Les .add() et .sub() sont des méthodes de bignumber que le package bn.js nous fournit
+    // https://www.npmjs.com/package/bn.js?activeTab=readme
+    expect(ownersBalanceAfterTransfer).to.be.bignumber.equal(ownersBalanceBeforeTransfer.sub(amount));
+    expect(recipientsBalanceAfterTransfer).to.be.bignumber.equal(recipientsBalanceBeforeTransfer.add(amount));
+  });
 });
