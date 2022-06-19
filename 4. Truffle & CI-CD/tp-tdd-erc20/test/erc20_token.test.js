@@ -51,4 +51,34 @@ contract('Erc20Token', (accounts) => {
     expect(balanceOwnerAfterTransfer).to.be.bignumber.equal(balanceOwnerBeforeTransfer.sub(amount));
     expect(balanceRecipientAfterTransfer).to.be.bignumber.equal(balanceRecipientBeforeTransfer.add(amount));
   });
+
+  //! Ne pas utiliser les fonctions fléchée car on n'aurait pas accès au context Mocha
+  // https://mochajs.org/#arrow-functions
+  it('vérifie si un approve est bien effectué', async function() {
+    /*
+      notes:
+      Une adresse peut allouer / autoriser un certain montant à une autre adresse, afin d'être utiliser
+      On a un mapping : (ownerAddr => (spenderAddr => balanceAutorized))
+      Une fonction allowance() permet de retrouver le uint(montant) alloué par l'owner au spender
+      Une fonction approve() permet à l'owner de rajouer un montant autorisé au sender 
+      Le montant alloué change donc une fois la fonction approve executée.
+      
+      On veut donc pouvoir checker si la fonction approve() passe bien
+      en vérifiant la valeur donnée par allowance() avant et après le call de approve() 
+
+      ==========================================================================================================
+
+      étapes:
+      On recup le montant que l'owner a (déjà) alloué au sender => fonction allowance(owner, sender)
+      On définit un montant à rajouter à ce montant alloué afin de tester si il se rajoute bien
+      L'owner autorise et rajoute un nouveau montant au sender => fonction approve()
+      On recup le nouveau montant alloué par l'owner au sender
+      On vérif que ce nouveau montant soit bien égal à l'ancien + le montant à rajouté définit plus haut
+    */
+    const allowanceSpenderBeforeApprove = await this.ERC20Instance.allowance(owner, spender);
+    const amount = new BN(10);
+    await this.ERC20Instance.approve(spender, amount, {from: owner});
+    const allowanceSpenderAfterApprove = await this.ERC20Instance.allowance(owner, spender);
+    expect(allowanceSpenderAfterApprove).to.be.bignumber.equal(allowanceSpenderBeforeApprove.add(amount));
+  });
 });
