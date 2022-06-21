@@ -21,14 +21,10 @@ Mocha est le framework de test et Chai est la lib d'assertions (contient les fon
 
 [Ecrire les tests en JS avec Mocha](https://trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript/)
 
-[Doc du bignumber en JS](https://mikemcl.github.io/bignumber.js/)
-
-[Doc librairie test-helpers d'openzeppelin](https://www.npmjs.com/package/@openzeppelin/test-helpers)
-
 [Les options de configuration de Mocha - à faire dans le fichier `truffle-config.js`](https://mochajs.org/api/mocha)
 
 [Une customisation indispensable](https://mochajs.org/#reporters)
 
-[La liste des fonctions d'expect de Chai](https://www.chaijs.com/api/bdd/)
+[La liste des fonctions d'assertion de Chai](https://www.chaijs.com/api/assert/#method_assert)
 
 [Le lien vers le code des tests commentés](./test/simple_storage.js)
