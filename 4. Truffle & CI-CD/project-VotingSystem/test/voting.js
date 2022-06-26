@@ -11,8 +11,7 @@ contract('Voting', (accounts) => {
   const voter4 = accounts[4];
   const voter5 = accounts[5];
   const voter6 = accounts[6];
-  const voter7 = accounts[7];
-  const nonVoter = accounts[8];
+  const nonVoter = accounts[7];
   // Déclaration d'une variable qui va recevoir une instance du contrat Voting
   let VotingInstance;
 
@@ -232,6 +231,54 @@ contract('Voting', (accounts) => {
 
 
   describe("Tests du dépouillage", () => {
+
+    before(async () => {
+      /*
+        Etapes :
+        1 - Nouvelle instance du contrat
+        2 - On rajoute quelques voters
+        3 - startProposalsRegistering
+        4 - Les voters rajoute des proposals
+        5 - endProposalsRegistering
+        6 - startVotingSession
+        7 - Les voters votent (proposalsArray[0] en majorité)
+        8 - endVotingSession
+      */
+      VotingInstance = await Voting.new({from:owner});
+
+      await VotingInstance.addVoter(voter1, {from: owner});
+      await VotingInstance.addVoter(voter2, {from: owner});
+      await VotingInstance.addVoter(voter3, {from: owner});
+      await VotingInstance.addVoter(voter4, {from: owner});
+      await VotingInstance.addVoter(voter5, {from: owner});
+      await VotingInstance.addVoter(voter6, {from: owner});
+
+      await VotingInstance.startProposalsRegistering({from: owner});
+
+      await VotingInstance.addProposal("Proposal 1", {from: voter1});
+      await VotingInstance.addProposal("Proposal 2", {from: voter2});
+      await VotingInstance.addProposal("Proposal 3", {from: voter3});
+
+      await VotingInstance.endProposalsRegistering({from: owner});
+
+      await VotingInstance.startVotingSession({from: owner});
+
+      await VotingInstance.setVote(new BN(0), {from: voter1});
+      await VotingInstance.setVote(new BN(0), {from: voter2});
+      await VotingInstance.setVote(new BN(0), {from: voter3});
+      await VotingInstance.setVote(new BN(1), {from: voter4});
+      await VotingInstance.setVote(new BN(1), {from: voter5});
+      await VotingInstance.setVote(new BN(2), {from: voter6});
+
+      await VotingInstance.endVotingSession({from: owner});
+    });
+
+    // tallyVotes
+    it("should get the right winning proposal", async () => {
+      await VotingInstance.tallyVotes({from: owner});
+      const winnigProposal = await VotingInstance.winningProposalID.call();
+      expect(new BN(winnigProposal)).to.be.bignumber.equal(new BN(0));
+    });
 
   });
 });
