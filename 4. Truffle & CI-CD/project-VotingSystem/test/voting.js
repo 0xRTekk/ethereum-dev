@@ -154,8 +154,38 @@ contract('Voting', (accounts) => {
   });
 
 
-  describe("Tests des setters", () => {
+  describe.only("Tests des setters", () => {
 
+    before(async () => {
+      VotingInstance = await Voting.new({from:owner});
+    });
+
+    // add Voter
+    it("should add a voter", async () => {
+      await VotingInstance.addVoter(voter1, {from: owner});
+      const addedVoter = await VotingInstance.getVoter(voter1, {from: voter1});
+      expect(addedVoter.isRegistered).to.be.true;
+    });
+
+    // add proposal
+    it("should add a proposal", async () => {
+      await VotingInstance.startProposalsRegistering({from: owner});
+      await VotingInstance.addProposal("Proposal de test", {from: voter1});
+
+      const addedProposal = await VotingInstance.getOneProposal(new BN(0), {from: voter1});
+      expect(addedProposal.description).to.equal("Proposal de test");
+    });
+
+    // set vote
+    it("should set hasVoted to true and the proposal's id on the voter's struct", async () => {
+      await VotingInstance.endProposalsRegistering({from: owner});
+      await VotingInstance.startVotingSession({from: owner});
+      await VotingInstance.setVote(new BN(0), {from: voter1});
+
+      const voter = await VotingInstance.getVoter(voter1, {from: voter1});
+      expect(voter.hasVoted).to.be.true;
+      expect(new BN(voter.votedProposalId)).to.be.bignumber.equal(new BN(0));
+    });
   });
 
 

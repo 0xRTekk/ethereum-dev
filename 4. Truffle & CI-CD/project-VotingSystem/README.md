@@ -52,8 +52,8 @@ Il faut tout d'abord installer toutes les dépendances du projet avec la command
 ### 3 tests prévus
 
 - Doit rajouter un voter dans le mapping
-- Doit rajouter le vote du voter sur sa struct
 - Doit rajouter une proposal dans le tableau
+- Doit rajouter le vote du voter sur sa struct
 
 ## 4 - Tests des getters
 
