@@ -17,3 +17,9 @@
 [TP Student](./tp-manip-stockage/README.md)
 
 [TP SPA](./tp-manip-stockage-plus/README.md)
+
+---
+
+## Projet fin de chapitre
+
+[Projet Voting System Truffle](./project-VotingSystem/README.md)
