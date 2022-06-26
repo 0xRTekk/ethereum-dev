@@ -1,7 +1,6 @@
 const Voting = artifacts.require("Voting.sol");
 const { BN, expectRevert, expectEvent } = require('@openzeppelin/test-helpers');
 const { expect } = require('chai');
-const { before } = require('lodash');
 
 contract('Voting', (accounts) => {
   // Instanciations des accounts pour nos tests
@@ -17,7 +16,7 @@ contract('Voting', (accounts) => {
   // Déclaration d'une variable qui va recevoir une instance du contrat Voting
   let VotingInstance;
 
-  // Chapitre de tests des requires
+
   describe("Tests des requires", () => {
 
     beforeEach(async () => {
@@ -112,21 +111,63 @@ contract('Voting', (accounts) => {
     });
   });
 
+
   describe("Tests des events", () => {
 
+    before(async () => {
+      VotingInstance = await Voting.new({from:owner});
+    });
+    
+    // Enregistrement voter
+    it("should emit the VoterRegistered event", async () => {
+      const calledFunction = await VotingInstance.addVoter(voter1, {from: owner});
+      expectEvent(calledFunction, "VoterRegistered", {voterAddress: voter1});
+    });
+
+    // Changement de phase
+    it("should emit the WorkflowStatusChange event", async () => {
+      const calledFunction = await VotingInstance.startProposalsRegistering({from: owner});
+      expectEvent(
+        calledFunction,
+        "WorkflowStatusChange",
+        {
+          previousStatus: new BN(Voting.WorkflowStatus.RegisteringVoters),
+          newStatus: new BN(Voting.WorkflowStatus.ProposalsRegistrationStarted)
+        }
+      );
+    });
+
+    // Enregistrement proposal
+    it("should emit the ProposalRegistered event", async () => {
+      const calledFunction = await VotingInstance.addProposal("Proposal de test", {from: voter1});
+      expectEvent(calledFunction, "ProposalRegistered", {proposalId: new BN(0)});
+    });
+
+    // Enregistrement vote
+    it("should emit the Voted event", async () => {
+      await VotingInstance.endProposalsRegistering({from: owner});
+      await VotingInstance.startVotingSession({from: owner});
+
+      const calledFunction = await VotingInstance.setVote(new BN(0), {from: voter1});
+      expectEvent(calledFunction, "Voted", {voter: voter1, proposalId: new BN(0)});
+    });
   });
+
 
   describe("Tests des setters", () => {
 
   });
 
+
   describe("Tests des getters", () => {
 
   });
 
+
   describe("Tests des WorkflowStatus", () => {
 
   });
+
 
   describe("Tests du dépouillage", () => {
 
