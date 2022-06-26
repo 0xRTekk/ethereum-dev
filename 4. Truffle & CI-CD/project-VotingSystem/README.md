@@ -19,8 +19,8 @@ Il faut tout d'abord installer toutes les dépendances du projet avec la command
 
 2 scripts npm vous sont mit à disposition :
 
-- `test:dev` => permet de lancer les tests sur le réseau `development`. *Assurez-vous d'avoir bien lancé un réseau avec Ganache*
-- `test:ropsten` => permet de lancer les tests sur le testnet Ethereum `ropsten`. *Assurez-vous d'avoir bien renseigné les variables d'environnement dans un fichier `.env`*
+- `npm run test:dev` => permet de lancer les tests sur le réseau `development`. *Assurez-vous d'avoir bien lancé un réseau avec Ganache*
+- `npm run test:ropsten` => permet de lancer les tests sur le testnet Ethereum `ropsten`. *Assurez-vous d'avoir bien renseigné les variables d'environnement dans un fichier `.env`*
 
 ## 1 - Tests des requires
 
