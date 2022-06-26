@@ -154,20 +154,20 @@ contract('Voting', (accounts) => {
   });
 
 
-  describe.only("Tests des setters", () => {
+  describe("Tests des setters & getters", () => {
 
     before(async () => {
       VotingInstance = await Voting.new({from:owner});
     });
 
-    // add Voter
+    // add & get Voter
     it("should add a voter", async () => {
       await VotingInstance.addVoter(voter1, {from: owner});
       const addedVoter = await VotingInstance.getVoter(voter1, {from: voter1});
       expect(addedVoter.isRegistered).to.be.true;
     });
 
-    // add proposal
+    // add & get proposal
     it("should add a proposal", async () => {
       await VotingInstance.startProposalsRegistering({from: owner});
       await VotingInstance.addProposal("Proposal de test", {from: voter1});
@@ -189,13 +189,45 @@ contract('Voting', (accounts) => {
   });
 
 
-  describe("Tests des getters", () => {
-
-  });
-
-
   describe("Tests des WorkflowStatus", () => {
+    
+    before(async () => {
+      VotingInstance = await Voting.new({from:owner});
+    });
 
+    // Initial phase is RegisteringVoters
+    it("should set the initial phase as RegisteringVoters", async () => {
+      const currentPhase = await VotingInstance.workflowStatus({from: owner});
+      expect(new BN(currentPhase)).to.be.bignumber.equal(new BN(0));
+    });
+
+    // startProposalsRegistering
+    it("should startProposalsRegistering", async () => {
+      await VotingInstance.startProposalsRegistering({from: owner});
+      const currentPhase = await VotingInstance.workflowStatus({from: owner});
+      expect(new BN(currentPhase)).to.be.bignumber.equal(new BN(1));
+    });
+
+    // endProposalsRegistering
+    it("should endProposalsRegistering", async () => {
+      await VotingInstance.endProposalsRegistering({from: owner});
+      const currentPhase = await VotingInstance.workflowStatus({from: owner});
+      expect(new BN(currentPhase)).to.be.bignumber.equal(new BN(2));
+    });
+    
+    // startVotingSession
+    it("should startVotingSession", async () => {
+      await VotingInstance.startVotingSession({from: owner});
+      const currentPhase = await VotingInstance.workflowStatus({from: owner});
+      expect(new BN(currentPhase)).to.be.bignumber.equal(new BN(3));
+    });
+
+    // endVotingSession
+    it("should endVotingSession", async () => {
+      await VotingInstance.endVotingSession({from: owner});
+      const currentPhase = await VotingInstance.workflowStatus({from: owner});
+      expect(new BN(currentPhase)).to.be.bignumber.equal(new BN(4));
+    });
   });
 
 

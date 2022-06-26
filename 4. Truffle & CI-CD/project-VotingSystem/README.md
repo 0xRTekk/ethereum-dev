@@ -47,22 +47,15 @@ Il faut tout d'abord installer toutes les dépendances du projet avec la command
 - event ProposalRegistered
 - event Voted
 
-## 3 - Tests des setters
+## 3 - Tests des setters & getter
 
 ### 3 tests prévus
 
-- Doit rajouter un voter dans le mapping
-- Doit rajouter une proposal dans le tableau
+- Doit rajouter un voter dans le mapping et renvoyer le voter en question
+- Doit rajouter une proposal dans le tableau et renvoyer la proposal en question
 - Doit rajouter le vote du voter sur sa struct
 
-## 4 - Tests des getters
-
-### 2 tests prévus
-
-- Doit retourner un voter rajouter à une certaine adresse
-- Doit retourner la proposal dernièrement rajoutée dans le tableau
-
-## 5 - Tests des WorkflowStatus
+## 4 - Tests des WorkflowStatus
 
 ### 5 tests prévus
 
@@ -72,7 +65,7 @@ Il faut tout d'abord installer toutes les dépendances du projet avec la command
 - Doit commencer la phase de vote
 - Doit terminer la phase de vote
 
-## 6 - Tests du dépouillage de votes
+## 5 - Tests du dépouillage de votes
 
 ### 1 test prévu
 
