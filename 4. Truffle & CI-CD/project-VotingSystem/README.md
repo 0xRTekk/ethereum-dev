@@ -6,7 +6,7 @@ Les tests unitaires sont a effectuer sur la correction du [projet Voting du chap
 
 Les tests sont rédigés en Javascript [dans le fichier `test/voting.js`](./test/voting.js).
 
-**Il y a 26 tests au total.**
+**Il y a 24 tests au total.**
 
 ## Comment lancer le projet
 
