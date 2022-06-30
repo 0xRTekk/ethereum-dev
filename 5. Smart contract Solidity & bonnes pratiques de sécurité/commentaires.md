@@ -70,6 +70,14 @@ sudo add-apt-repository ppa:ethereum/ethereum
 sudo apt-get update
 sudo apt-get install solc
 
-# Avec la commande, on génère les docs utilisateurs et dev
-solc --userdoc --devdoc ex1.sol
+# Avec la commande, on génère les docs utilisateurs et dev sous format json
+solc --userdoc --devdoc ERC20.sol -o docs/
 ```
+
+## Génération de doc plus visuelles
+
+Il existe des outils qui permettent de générer de la doc plus visuelle.
+
+[Doxity](https://github.com/DigixGlobal/doxity) qui s'intègre dans Truffle. Cet outil permet de générer la doc consultable sur navigateur
+
+[Surya](https://github.com/ConsenSys/surya) qui permet d'avoir un graphe qui représente les intéractions des fonctions, contrats etc
