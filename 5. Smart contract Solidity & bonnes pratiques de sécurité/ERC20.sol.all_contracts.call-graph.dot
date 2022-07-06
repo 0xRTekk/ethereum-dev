@@ -1,0 +1,71 @@
+strict digraph {
+subgraph cluster_585_ERC20 {
+label = "ERC20"
+"585__spendAllowance" [label="_spendAllowance"]
+"585_decimals" [label="decimals"]
+"585__approve" [label="_approve"]
+"585_approve" [label="approve"]
+"585__transfer" [label="_transfer"]
+"585_constructor" [label="constructor"]
+"585_name" [label="name"]
+"585_transferFrom" [label="transferFrom"]
+"585_increaseAllowance" [label="increaseAllowance"]
+"585_transfer" [label="transfer"]
+"585_allowance" [label="allowance"]
+"585_totalSupply" [label="totalSupply"]
+"585__afterTokenTransfer" [label="_afterTokenTransfer"]
+"585_symbol" [label="symbol"]
+"585__beforeTokenTransfer" [label="_beforeTokenTransfer"]
+"585_decreaseAllowance" [label="decreaseAllowance"]
+"585_balanceOf" [label="balanceOf"]
+"585__burn" [label="_burn"]
+"585__mint" [label="_mint"]
+"585_approve" -> "585__approve"
+"585__transfer" -> "585__afterTokenTransfer"
+"585__mint" -> "585__beforeTokenTransfer"
+"585_decreaseAllowance" -> "585__msgSender"
+"585_transfer" -> "585__transfer"
+"585__transfer" -> "585__beforeTokenTransfer"
+"585_decreaseAllowance" -> "585_allowance"
+"585_increaseAllowance" -> "585_allowance"
+"585_approve" -> "585__msgSender"
+"585_transferFrom" -> "585__msgSender"
+"585_increaseAllowance" -> "585__approve"
+"585__burn" -> "585__afterTokenTransfer"
+"585__spendAllowance" -> "585_allowance"
+"585_transferFrom" -> "585__transfer"
+"585_increaseAllowance" -> "585__msgSender"
+"585_transferFrom" -> "585__spendAllowance"
+"585__spendAllowance" -> "585__approve"
+"585__mint" -> "585__afterTokenTransfer"
+"585__burn" -> "585__beforeTokenTransfer"
+"585_decreaseAllowance" -> "585__approve"
+"585_transfer" -> "585__msgSender"
+}subgraph cluster_691_IERC20 {
+label = "IERC20"
+"691_approve" [label="approve"]
+"691_transfer" [label="transfer"]
+"691_transferFrom" [label="transferFrom"]
+"691_allowance" [label="allowance"]
+"691_balanceOf" [label="balanceOf"]
+"691_totalSupply" [label="totalSupply"]
+}subgraph cluster_716_IERC20Metadata {
+label = "IERC20Metadata"
+"716_symbol" [label="symbol"]
+"716_name" [label="name"]
+"716_decimals" [label="decimals"]
+}subgraph cluster_613_Context {
+label = "Context"
+"613__msgData" [label="_msgData"]
+"613__msgSender" [label="_msgSender"]
+}subgraph cluster_solidity {
+label = "[Solidity]"
+"require(bool,string)" 
+"585__burn" -> "require(bool,string)"
+"585__transfer" -> "require(bool,string)"
+"585__spendAllowance" -> "require(bool,string)"
+"585__approve" -> "require(bool,string)"
+"585__mint" -> "require(bool,string)"
+"585_decreaseAllowance" -> "require(bool,string)"
+}
+}

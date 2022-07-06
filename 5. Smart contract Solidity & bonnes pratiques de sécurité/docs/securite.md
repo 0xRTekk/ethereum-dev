@@ -35,5 +35,5 @@ L’analyse statique permet de détecter automatiquement plusieurs classes d'err
 ### Exécution symbolique
 
 - [Mythril](https://github.com/ConsenSys/mythril) est un outil d'analyse de sécurité pour le bytecode EVM. Il fait parti de MythX Tools
-- [Manticore](https://github.com/trailofbits/manticore) est un outil d'**analyse dynmaique**. Il permet d’étudier l’ensemble des états que peut prendre le Smart Contract. 
+- [Manticore](https://github.com/trailofbits/manticore) est un outil d'**analyse dynmaique**. Il permet d’étudier l’ensemble des états que peut prendre le Smart Contract.
 - [Echidna](https://github.com/crytic/echidna) est le seul outils pour faire du **Fuzz Testing** sur les smart contracts. Permet de tester les SM avec un nombre considérable d'entrée afin de pallier à toutes les éventualités.
