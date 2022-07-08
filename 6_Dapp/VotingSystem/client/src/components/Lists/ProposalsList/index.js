@@ -19,15 +19,15 @@ function ProposalsList() {
         <Table.Body>
           <Table.Row>
             <Table.Cell width='1'>1</Table.Cell>
-            <Table.Cell>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia soluta, eius ea fugit cupiditate labore.</Table.Cell>
+            <Table.Cell>Lorem ipsum dolor sit amet consectetur adipisicing elit.</Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell>2</Table.Cell>
-            <Table.Cell>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia soluta, eius ea fugit cupiditate labore.</Table.Cell>
+            <Table.Cell>Lorem ipsum dolor sit amet consectetur adipisicing elit.</Table.Cell>
           </Table.Row>
           <Table.Row>
             <Table.Cell>3</Table.Cell>
-            <Table.Cell>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia soluta, eius ea fugit cupiditate labore.</Table.Cell>
+            <Table.Cell>Lorem ipsum dolor sit amet consectetur adipisicing elit.</Table.Cell>
           </Table.Row>
         </Table.Body>
       </Table>

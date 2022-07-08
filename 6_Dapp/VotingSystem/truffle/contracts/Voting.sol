@@ -6,7 +6,7 @@ import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
 contract Voting is Ownable {
 
-    uint public winningProposalID;
+    uint8 public winningProposalID;
     
     struct Voter {
         bool isRegistered;
@@ -33,10 +33,10 @@ contract Voting is Ownable {
     mapping (address => Voter) voters;
 
 
-    event VoterRegistered(address voterAddress); 
-    event WorkflowStatusChange(WorkflowStatus previousStatus, WorkflowStatus newStatus);
-    event ProposalRegistered(uint proposalId);
-    event Voted (address voter, uint proposalId);
+    event VoterRegistered(address _voterAddress); 
+    event WorkflowStatusChange(WorkflowStatus _previousStatus, WorkflowStatus _newStatus);
+    event ProposalRegistered(uint _proposalId);
+    event Voted (address _voter, uint _proposalId);
 
     modifier onlyVoters() {
         require(voters[msg.sender].isRegistered, "You're not a voter");
@@ -69,6 +69,8 @@ contract Voting is Ownable {
     // ::::::::::::: PROPOSAL ::::::::::::: // 
 
     function addProposal(string memory _desc) external onlyVoters {
+        // 
+        require(proposalsArray.length <= 10, "Proposals list is full");
         require(workflowStatus == WorkflowStatus.ProposalsRegistrationStarted, 'Proposals are not allowed yet');
         require(keccak256(abi.encode(_desc)) != keccak256(abi.encode("")), 'Vous ne pouvez pas ne rien proposer'); // facultatif
         // voir que desc est different des autres
@@ -81,7 +83,7 @@ contract Voting is Ownable {
 
     // ::::::::::::: VOTE ::::::::::::: //
 
-    function setVote( uint _id) external onlyVoters {
+    function setVote(uint8 _id) external onlyVoters {
         require(workflowStatus == WorkflowStatus.VotingSessionStarted, 'Voting session havent started yet');
         require(voters[msg.sender].hasVoted != true, 'You have already voted');
         require(_id < proposalsArray.length, 'Proposal not found'); // pas obligé, et pas besoin du >0 car uint
@@ -89,6 +91,10 @@ contract Voting is Ownable {
         voters[msg.sender].votedProposalId = _id;
         voters[msg.sender].hasVoted = true;
         proposalsArray[_id].voteCount++;
+
+        if (proposalsArray[_id].voteCount > proposalsArray[winningProposalID].voteCount) {
+            winningProposalID = _id;
+        }
 
         emit Voted(msg.sender, _id);
     }
@@ -119,18 +125,22 @@ contract Voting is Ownable {
         emit WorkflowStatusChange(WorkflowStatus.VotingSessionStarted, WorkflowStatus.VotingSessionEnded);
     }
 
-
-   function tallyVotes() external onlyOwner {
-       require(workflowStatus == WorkflowStatus.VotingSessionEnded, "Current status is not voting session ended");
-       uint _winningProposalId;
-      for (uint256 p = 0; p < proposalsArray.length; p++) {
-           if (proposalsArray[p].voteCount > proposalsArray[_winningProposalId].voteCount) {
-               _winningProposalId = p;
-          }
-       }
-       winningProposalID = _winningProposalId;
+    // ===== SECURITE =====
+    // La fonction n'est plus a utiliser. On a déplacer le calcul du gagnant dans la fonction de vote
+    // Plus de souci de boucle for et de potentiel DoS Gas Limit
+    // Pour recup l'id du gagnant on utilise le getter winningProposalID
+    // ====================
+//    function tallyVotes() external onlyOwner {
+//        require(workflowStatus == WorkflowStatus.VotingSessionEnded, "Current status is not voting session ended");
+//        uint8 _winningProposalId;
+//       for (uint8 p = 0; p < proposalsArray.length; p++) {
+//            if (proposalsArray[p].voteCount > proposalsArray[_winningProposalId].voteCount) {
+//                _winningProposalId = p;
+//           }
+//        }
+//        winningProposalID = _winningProposalId;
        
-       workflowStatus = WorkflowStatus.VotesTallied;
-       emit WorkflowStatusChange(WorkflowStatus.VotingSessionEnded, WorkflowStatus.VotesTallied);
-    }
+//        workflowStatus = WorkflowStatus.VotesTallied;
+//        emit WorkflowStatusChange(WorkflowStatus.VotingSessionEnded, WorkflowStatus.VotesTallied);
+//     }
 }

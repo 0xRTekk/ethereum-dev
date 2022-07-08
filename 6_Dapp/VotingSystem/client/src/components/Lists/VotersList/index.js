@@ -12,8 +12,8 @@ function VotersList() {
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Address</Table.HeaderCell>
-            <Table.HeaderCell>Has Voted</Table.HeaderCell>
-            <Table.HeaderCell>Proposal</Table.HeaderCell>
+            <Table.HeaderCell>Voted</Table.HeaderCell>
+            <Table.HeaderCell>Proposal voted</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
 
