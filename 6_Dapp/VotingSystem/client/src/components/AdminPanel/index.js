@@ -1,5 +1,5 @@
 // == Import npm
-import { Segment, Header, Form, Button, Input, Divider } from 'semantic-ui-react';
+import { Segment, Header, Form, Button, Input } from 'semantic-ui-react';
 
 // == Composant
 function AdminPanel() {
@@ -16,21 +16,21 @@ function AdminPanel() {
       </Form>
 
       <Segment textAlign='center' size='huge'>
-      <Header as='h3'>Phases control</Header>
+        <Header as='h3'>Phases control</Header>
 
-      <Button.Group>
-        <Button size='huge'>Add Voter's phase</Button>
-        <Button.Or text="&#10140;"/>
-        <Button size='huge'>Start adding proposal's phase</Button>
-        <Button.Or text="&#10140;"/>
-        <Button size='huge'>End adding proposal's phase</Button>
-        <Button.Or text="&#10140;"/>
-        <Button size='huge'>Start voting phase</Button>
-        <Button.Or text="&#10140;"/>
-        <Button size='huge'>End voting phase</Button>
-        <Button.Or text="&#10140;"/>
-        <Button size='huge'>Tally phase</Button>
-      </Button.Group>
+        <Button.Group>
+          <Button size='huge' basic color='orange'>Add Voter's phase</Button>
+          <Button.Or text="&#10140;"/>
+          <Button size='huge'>Start proposal's phase</Button>
+          <Button.Or text="&#10140;"/>
+          <Button size='huge'>End proposal's phase</Button>
+          <Button.Or text="&#10140;"/>
+          <Button size='huge'>Start voting phase</Button>
+          <Button.Or text="&#10140;"/>
+          <Button size='huge'>End voting phase</Button>
+          <Button.Or text="&#10140;"/>
+          <Button size='huge'>Tally phase</Button>
+        </Button.Group>
       </Segment>
 
     </Segment>
