@@ -7,9 +7,12 @@ import 'semantic-ui-css/semantic.min.css';
 import './index.css';
 
 // == Import components 
+import { EthProvider } from './contexts/EthContext'
 import Voting from './components/Voting';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <Voting />
+    <EthProvider>
+        <Voting />
+    </EthProvider>
 );

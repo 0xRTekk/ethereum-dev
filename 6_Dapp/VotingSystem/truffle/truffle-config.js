@@ -10,10 +10,10 @@ module.exports = {
       port: 8545,
       network_id: "*",
     },
-    ropsten:{
-      provider : function() {return new HDWalletProvider({mnemonic:{phrase:`${process.env.MNEMONIC}`},providerOrUrl:`https://ropsten.infura.io/v3/${process.env.INFURA_ID}`})},
-      network_id:3,
-    } 
+    ropsten: {
+      provider: function () { return new HDWalletProvider({ mnemonic: { phrase: `${process.env.MNEMONIC}` }, providerOrUrl: `https://ropsten.infura.io/v3/${process.env.INFURA_ID}` }) },
+      network_id: 3,
+    },
   },
 
   mocha: {
