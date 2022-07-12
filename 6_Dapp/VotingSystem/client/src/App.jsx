@@ -4,6 +4,7 @@ import Setup from "./components/Setup";
 import Demo from "./components/Demo";
 import AdminPanel from "./components/AdminPanel";
 import VoterPanel from "./components/VoterPanel";
+import VotersList from "./components/VotersList";
 import Footer from "./components/Footer";
 import "./App.css";
 
@@ -15,6 +16,9 @@ function App() {
           <AdminPanel />
           <hr />
           <VoterPanel />
+          <hr />
+          <VotersList />
+          <hr />
           <Intro />
           <hr />
           <Setup />
