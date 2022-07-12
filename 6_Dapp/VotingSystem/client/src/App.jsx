@@ -2,6 +2,7 @@ import { EthProvider } from "./contexts/EthContext";
 import Intro from "./components/Intro/";
 import Setup from "./components/Setup";
 import Demo from "./components/Demo";
+import AdminPanel from "./components/AdminPanel";
 import Footer from "./components/Footer";
 import "./App.css";
 
@@ -15,6 +16,8 @@ function App() {
           <Setup />
           <hr />
           <Demo />
+          <hr />
+          <AdminPanel />
           <hr />
           <Footer />
         </div>

@@ -4,7 +4,7 @@ function Cta() {
       Try changing&nbsp;
       <span className="code">value</span>
       &nbsp;in&nbsp;
-      <span className="code"></span>.
+      <span className="code">SimpleStorage</span>.
     </p>
   );
 }
