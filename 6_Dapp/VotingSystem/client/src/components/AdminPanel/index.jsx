@@ -44,14 +44,24 @@ function AdminPanel() {
 
   const handleChange = (evt) => {
     setInputValue(evt.currentTarget.value);
-  }
+  };
+
+  const handleSubmit = async () => {
+    if (inputValue === "") {
+      alert("Please enter an address");
+      return;
+    }
+    await contract.methods.addVoter(inputValue).send({ from: accounts[0] });
+    const newVoter = await contract.methods.getVoter(inputValue).call({ from: accounts[0] });
+    console.log(newVoter);
+  };
 
   return (
     isOwner && (
       <Segment raised size="huge" color="orange">
         <Header as="h2">Admin's panel</Header>
 
-        <Form>
+        <Form onSubmit={handleSubmit}>
           <Form.Field>
             <Input
               value={inputValue}
@@ -72,15 +82,14 @@ function AdminPanel() {
           <Header as="h3">Next phase</Header>
 
           {phases.map((phase, index) => {
-            if (index === currentPhase+1) {
+            if (index === currentPhase + 1) {
               return (
                 <Button key={phase} size="huge" basic color="orange">
                   {phase}
                 </Button>
-              )
+              );
             }
           })}
-          
         </Segment>
       </Segment>
     )
