@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import { useState, useEffect } from "react";
 import { Segment, Header, Form, Button, Input } from "semantic-ui-react";
 import { useEth } from "../../contexts/EthContext";
@@ -52,8 +53,13 @@ function AdminPanel() {
       return;
     }
     await contract.methods.addVoter(inputValue).send({ from: accounts[0] });
-    const newVoter = await contract.methods.getVoter(inputValue).call({ from: accounts[0] });
-    console.log(newVoter);
+    // const newVoter = await contract.methods.getVoter(inputValue).call({ from: accounts[0] });
+    // console.log(newVoter);
+    location.reload();
+  };
+
+  const handleChangePhase = async () => {
+
   };
 
   return (
@@ -84,7 +90,7 @@ function AdminPanel() {
           {phases.map((phase, index) => {
             if (index === currentPhase + 1) {
               return (
-                <Button key={phase} size="huge" basic color="orange">
+                <Button key={phase} size="huge" basic color="orange" onClick={handleChangePhase}>
                   {phase}
                 </Button>
               );
