@@ -20,18 +20,6 @@ function AdminPanel() {
   ];
 
   useEffect(() => {
-    async function getPhase() {
-      if (artifact) {
-        // On check si l'account courant est l'owner du contract
-        const phase = await contract.methods.workflowStatus().call({ from: accounts[0] });
-        setCurrentPhase(parseInt(phase));
-      }
-    }
-
-    getPhase();
-  });
-
-  useEffect(() => {
     async function getOwner() {
       if (artifact) {
         // On check si l'account courant est l'owner du contract
@@ -40,8 +28,17 @@ function AdminPanel() {
       }
     }
 
+    async function getPhase() {
+      if (artifact) {
+        // On check si l'account courant est l'owner du contract
+        const phase = await contract.methods.workflowStatus().call({ from: accounts[0] });
+        setCurrentPhase(parseInt(phase));
+      }
+    }
+
     getOwner();
-  }, [accounts, contract, artifact]);
+    getPhase();
+  }, [accounts, contract, artifact, currentPhase]);
 
   const handleChange = (evt) => {
     setInputValue(evt.currentTarget.value);
@@ -59,7 +56,47 @@ function AdminPanel() {
   };
 
   const handleChangePhase = async () => {
+    console.log(currentPhase);
 
+    switch (currentPhase) {
+      case 0:
+        console.log("RegisteringVoters => startProposalsRegistering");
+
+        await contract.methods.startProposalsRegistering().send({ from: accounts[0] });
+        setCurrentPhase(1);
+        break;
+      case 1:
+        console.log("startProposalsRegistering => endProposalsRegistering");
+
+        await contract.methods.endProposalsRegistering().send({ from: accounts[0] });
+        setCurrentPhase(2);
+        break;
+      case 2:
+        console.log("endProposalsRegistering => startVotingSession");
+
+        const receipt = await contract.methods.startVotingSession().send({ from: accounts[0] });
+        console.log(receipt.events.WorkflowStatusChange.returnValues._newStatus);
+        setCurrentPhase(3);
+        break;
+      case 3:
+        console.log("startVotingSession => endVotingSession");
+
+        await contract.methods.endVotingSession().send({ from: accounts[0] });
+        setCurrentPhase(4);
+        break;
+      case 4:
+        console.log("endVotingSession => VotesTallied");
+
+        setCurrentPhase(5);
+        break;
+      case 5:
+        console.log("VotesTallied => RegisteringVoters");
+
+        setCurrentPhase(0);
+        break;
+      default:
+        break;
+    }
   };
 
   return (
