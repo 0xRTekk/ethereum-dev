@@ -1,8 +1,9 @@
+/* eslint-disable no-restricted-globals */
 import { useState, useEffect } from "react";
 import { Segment, Header, Form, Button, Input } from "semantic-ui-react";
 import { useEth } from "../../contexts/EthContext";
 
-function VoterPanel() {
+function VoterPanel({ proposals, setProposals }) {
   const {
     state: { accounts, contract, artifact },
   } = useEth();
@@ -20,13 +21,34 @@ function VoterPanel() {
           setIsVoter(false);
         }
       }
-    }
+    };
+
+    async function getProposals() {
+      if (contract) {
+        // On fait une copie du tableau de proposals
+        const newProposals = [...proposals];
+        // On écoute les events ProposalRegistered
+        contract.events.ProposalRegistered({ fromBlock: 0 }).on("data", (event) => {
+          console.log(`ProposalRegistered event log : ${event.returnValues._proposalId}`);
+          // On rajoute le nouvel id dans le tableau
+          newProposals.push(event.returnValues._proposalId);
+          // On met dans le state
+          setProposals(newProposals);
+        });
+      }
+    };
 
     getVoter();
+    getProposals();
   }, [accounts, contract, artifact]);
 
   const handleChange = (evt) => {
     setInputValue(evt.currentTarget.value);
+  };
+
+  const handleAddProposal = async () => {
+    await contract.methods.addProposal(inputValue).send({ from: accounts[0] });
+    location.reload();
   };
 
   return (
@@ -35,7 +57,7 @@ function VoterPanel() {
         <Header as="h2">Voter's panel</Header>
 
         <Segment size="huge">
-          <Form>
+          <Form onSubmit={handleAddProposal}>
             <Form.Field>
               <Input
                 value={inputValue}
@@ -58,9 +80,13 @@ function VoterPanel() {
             <Form.Field>
               <Input list="proposal" placeholder="Chose a proposal" size="huge" />
               <datalist id="proposal">
-                <option value="1">Lorem 1</option>
-                <option value="2">Lorem 2</option>
-                <option value="3">Lorem 3</option>
+                {proposals.map((proposal) => {
+                  return (
+                    <option key={`proposal-${proposal}`} value={proposal}>
+                      {proposal}
+                    </option>
+                  );
+                })}
               </datalist>
             </Form.Field>
             <Button color="green" type="submit" size="huge">
