@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-globals */
 import { useState, useEffect } from "react";
 import { Segment, Header, Form, Button, Input } from "semantic-ui-react";
 import { useEth } from "../../contexts/EthContext";
@@ -47,8 +46,11 @@ function VoterPanel({ proposals, setProposals }) {
   };
 
   const handleAddProposal = async () => {
-    await contract.methods.addProposal(inputValue).send({ from: accounts[0] });
-    location.reload();
+    const newProposals = [...proposals];
+    const receipt = await contract.methods.addProposal(inputValue).send({ from: accounts[0] });
+    newProposals.push(receipt.events.ProposalRegistered.returnValues._proposalId);
+    setProposals(newProposals);
+    setInputValue("");
   };
 
   return (
