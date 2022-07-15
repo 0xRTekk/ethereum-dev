@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Segment, Header, Form, Button, Input } from "semantic-ui-react";
+import { Segment, Header, Form, Button, Input, Radio } from "semantic-ui-react";
 import { useEth } from "../../contexts/EthContext";
 
 function VoterPanel({ proposals, setProposals }) {
@@ -8,6 +8,8 @@ function VoterPanel({ proposals, setProposals }) {
   } = useEth();
   const [isVoter, setIsVoter] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const [votedProposal, setVotedProposal] = useState(0);
+  const [proposalsArray, setProposalsArray] = useState([]);
 
   useEffect(() => {
     async function getVoter() {
@@ -80,16 +82,14 @@ function VoterPanel({ proposals, setProposals }) {
         <Segment size="huge">
           <Form>
             <Form.Field>
-              <Input list="proposal" placeholder="Chose a proposal" size="huge" />
-              <datalist id="proposal">
-                {proposals.map((proposal) => {
-                  return (
-                    <option key={`proposal-${proposal}`} value={proposal}>
-                      {proposal}
-                    </option>
-                  );
-                })}
-              </datalist>
+              {proposals.forEach(async (id) => {
+                const proposal = await contract.methods.getOneProposal(parseInt(id)).call({ from: accounts[0] });
+                console.log(proposal);
+                let newProposals = proposalsArray;
+                newProposals.push({ key: id, text: proposal.description, value: id });
+                setProposalsArray(newProposals);
+              })}
+              <Form.Select fluid label="Proposal's list" options={proposalsArray} placeholder="Proposal's list" />
             </Form.Field>
             <Button color="green" type="submit" size="huge">
               Add
