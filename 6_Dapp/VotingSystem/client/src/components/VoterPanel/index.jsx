@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Segment, Header, Form, Button, Input, Radio } from "semantic-ui-react";
 import { useEth } from "../../contexts/EthContext";
 
-function VoterPanel({ proposals, setProposals }) {
+function VoterPanel({ proposals, setProposals, currentPhase }) {
   const {
     state: { accounts, contract, artifact },
   } = useEth();
@@ -22,7 +22,7 @@ function VoterPanel({ proposals, setProposals }) {
           setIsVoter(false);
         }
       }
-    };
+    }
 
     async function getProposals() {
       if (contract) {
@@ -37,7 +37,7 @@ function VoterPanel({ proposals, setProposals }) {
           setProposals(newProposals);
         });
       }
-    };
+    }
 
     getVoter();
     getProposals();
@@ -59,43 +59,45 @@ function VoterPanel({ proposals, setProposals }) {
     isVoter && (
       <Segment raised size="huge" color="green">
         <Header as="h2">Voter's panel</Header>
-
-        <Segment size="huge">
-          <Form onSubmit={handleAddProposal}>
-            <Form.Field>
-              <Input
-                value={inputValue}
-                onChange={handleChange}
-                icon="file alternate outline"
-                iconPosition="left"
-                placeholder="Add Proposal"
-                size="huge"
-                fluid
-              />
-            </Form.Field>
-            <Button color="green" type="submit" size="huge" fluid>
-              Add
-            </Button>
-          </Form>
-        </Segment>
-
-        <Segment size="huge">
-          <Form>
-            <Form.Field>
-              {proposals.forEach(async (id) => {
-                const proposal = await contract.methods.getOneProposal(parseInt(id)).call({ from: accounts[0] });
-                console.log(proposal);
-                let newProposals = proposalsArray;
-                newProposals.push({ key: id, text: proposal.description, value: id });
-                setProposalsArray(newProposals);
-              })}
-              <Form.Select fluid label="Proposal's list" options={proposalsArray} placeholder="Proposal's list" />
-            </Form.Field>
-            <Button color="green" type="submit" size="huge">
-              Add
-            </Button>
-          </Form>
-        </Segment>
+        {currentPhase === 1 && (
+          <Segment size="huge">
+            <Form onSubmit={handleAddProposal}>
+              <Form.Field>
+                <Input
+                  value={inputValue}
+                  onChange={handleChange}
+                  icon="file alternate outline"
+                  iconPosition="left"
+                  placeholder="Add Proposal"
+                  size="huge"
+                  fluid
+                />
+              </Form.Field>
+              <Button color="green" type="submit" size="huge" fluid>
+                Add
+              </Button>
+            </Form>
+          </Segment>
+        )}
+        {currentPhase === 3 && (
+          <Segment size="huge">
+            <Form>
+              <Form.Field>
+                {proposals.forEach(async (id) => {
+                  const proposal = await contract.methods.getOneProposal(parseInt(id)).call({ from: accounts[0] });
+                  console.log(proposal);
+                  let newProposals = proposalsArray;
+                  newProposals.push({ key: id, text: proposal.description, value: id });
+                  setProposalsArray(newProposals);
+                })}
+                <Form.Select fluid label="Proposal's list" options={proposalsArray} placeholder="Proposal's list" />
+              </Form.Field>
+              <Button color="green" type="submit" size="huge">
+                Add
+              </Button>
+            </Form>
+          </Segment>
+          )}
       </Segment>
     )
   );
