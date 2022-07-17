@@ -17,18 +17,6 @@ function VotersList() {
         const eventVoters = await contract.getPastEvents("VoterRegistered", { fromBlock: 0, toBlock: "latest" });
         // On fait un tableau avec leur adresses
         let votersAddrs = eventVoters.map((voter) => voter.returnValues._voterAddress);
-        // On se fait un tableau d'objet représentant les voters
-        // const votersDatas = votersAddrs.map(async (voter) => {
-        //   const data = await contract.methods.getVoter(voter).call({ from: accounts[0] });
-        //   return (votersDatas[voter] = {...data});
-        // });
-        // console.log(votersDatas);
-
-        // On se met en écoute sur les prochains events VoterRegistered
-        contract.events.VoterRegistered({ fromBlock: 0 }).on("data", (event) => {
-          console.log(event);
-          votersAddrs.push(event.returnValues._voterAddress);
-        });
 
         // On mémorise dans le state
         setVoters(votersAddrs);
