@@ -95,7 +95,8 @@ function AdminPanel({ currentPhase, setCurrentPhase, phases }) {
       <Segment raised size="huge" color="orange">
         <Header as="h2">Admin's panel</Header>
 
-        <Form onSubmit={handleSubmit}>
+        {currentPhase === 0 && (
+          <Form onSubmit={handleSubmit}>
           <Form.Field>
             <Input
               value={inputValue}
@@ -111,7 +112,8 @@ function AdminPanel({ currentPhase, setCurrentPhase, phases }) {
             Add
           </Button>
         </Form>
-
+        )}
+        
         <Segment textAlign="center" size="huge">
           <Header as="h3">Next phase</Header>
 
