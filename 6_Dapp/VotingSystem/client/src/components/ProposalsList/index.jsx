@@ -44,8 +44,6 @@ function ProposalsList({ proposals }) {
     };
 
     getProposals();
-    console.log(proposalsData);
-
   }, [accounts, contract, artifact]);
 
   return (
