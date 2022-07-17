@@ -36,7 +36,7 @@ function VoterPanel({ proposals, setProposals, currentPhase }) {
     }
 
     getVoter();
-    getProposals();
+    // getProposals();
   }, [accounts, contract, artifact]);
 
   const handleChange = (evt) => {
@@ -44,11 +44,16 @@ function VoterPanel({ proposals, setProposals, currentPhase }) {
   };
 
   const handleAddProposal = async () => {
-    const newProposals = [...proposals];
+    if (inputValue === "") {
+      alert("Please enter a description");
+      return;
+    }
+    // const newProposals = [...proposals];
     const receipt = await contract.methods.addProposal(inputValue).send({ from: accounts[0] });
-    newProposals.push(receipt.events.ProposalRegistered.returnValues._proposalId);
-    setProposals(newProposals);
-    setInputValue("");
+    // newProposals.push(receipt.events.ProposalRegistered.returnValues._proposalId);
+    // setProposals(receipt.events.ProposalRegistered.returnValues._proposalId);
+    // setInputValue("");
+    window.location.reload();
   };
 
   return (
@@ -81,7 +86,6 @@ function VoterPanel({ proposals, setProposals, currentPhase }) {
               <Form.Field>
                 {proposals.forEach(async (id) => {
                   const proposal = await contract.methods.getOneProposal(parseInt(id)).call({ from: accounts[0] });
-                  console.log(proposal);
                   let newProposals = proposalsArray;
                   newProposals.push({ key: id, text: proposal.description, value: id });
                   setProposalsArray(newProposals);

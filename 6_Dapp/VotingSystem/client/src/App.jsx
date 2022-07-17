@@ -5,6 +5,7 @@ import { EthProvider } from "./contexts/EthContext";
 import AdminPanel from "./components/AdminPanel";
 import VoterPanel from "./components/VoterPanel";
 import VotersList from "./components/VotersList";
+import ProposalsList from "./components/ProposalsList";
 
 import "./App.css";
 
@@ -29,6 +30,8 @@ function App() {
           <VoterPanel proposals={proposals} setProposals={setProposals} currentPhase={currentPhase} />
           <hr />
           <VotersList />
+          <hr />
+          <ProposalsList proposals={proposals} />
         </div>
       </div>
     </EthProvider>
