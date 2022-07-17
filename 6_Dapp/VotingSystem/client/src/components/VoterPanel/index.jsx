@@ -26,16 +26,12 @@ function VoterPanel({ proposals, setProposals, currentPhase }) {
 
     async function getProposals() {
       if (contract) {
-        // On fait une copie du tableau de proposals
-        const newProposals = [...proposals];
-        // On écoute les events ProposalRegistered
-        contract.events.ProposalRegistered({ fromBlock: 0 }).on("data", (event) => {
-          console.log(`ProposalRegistered event log : ${event.returnValues._proposalId}`);
-          // On rajoute le nouvel id dans le tableau
-          newProposals.push(event.returnValues._proposalId);
-          // On met dans le state
-          setProposals(newProposals);
-        });
+        // On recup les proposals déjà dans la whitelist
+        const eventProposals = await contract.getPastEvents("ProposalRegistered", { fromBlock: 0, toBlock: "latest" });
+        // On fait un tableau avec leur ids
+        const proposalsId = eventProposals.map((proposal) => proposal.returnValues._proposalId);
+        // On mémorise dans le state
+        setProposals(proposalsId);
       }
     }
 
