@@ -20,6 +20,7 @@ function App() {
     "VotesTallied",
   ];
   const [proposals, setProposals] = useState([]);
+  const [winner, setWinner] = useState(null);
 
   return (
     <EthProvider>
@@ -27,11 +28,15 @@ function App() {
         <div className="container">
           <AdminPanel currentPhase={currentPhase} setCurrentPhase={setCurrentPhase} phases={phases} />
           <hr />
-          <VoterPanel proposals={proposals} setProposals={setProposals} currentPhase={currentPhase} />
+          <VoterPanel proposals={proposals} setProposals={setProposals} currentPhase={currentPhase} setWinner={setWinner} />
           <hr />
           <VotersList />
           <hr />
           <ProposalsList proposals={proposals} />
+          <hr />
+          {winner !== null && (
+            <div>The winner is : {winner}</div>
+          )}
         </div>
       </div>
     </EthProvider>

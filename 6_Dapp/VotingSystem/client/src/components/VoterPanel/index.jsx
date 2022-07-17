@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Segment, Header, Form, Button, Input, Dropdown, Radio } from "semantic-ui-react";
 import { useEth } from "../../contexts/EthContext";
 
-function VoterPanel({ proposals, setProposals, currentPhase }) {
+function VoterPanel({ proposals, setProposals, currentPhase, setWinner }) {
   const {
     state: { accounts, contract, artifact },
   } = useEth();
@@ -84,6 +84,11 @@ function VoterPanel({ proposals, setProposals, currentPhase }) {
   const handleVote = async () => {
     // selectedProposal
     await contract.methods.setVote(parseInt(selectedProposal)).send({ from: accounts[0] });
+
+    const winnerId = await contract.methods.winningProposalID().call({ from: accounts[0] });
+    const winnerProposal = await contract.methods.getOneProposal(parseInt(winnerId)).call({ from: accounts[0] });
+    setWinner(winnerProposal);
+
     window.location.reload();
   };
   
