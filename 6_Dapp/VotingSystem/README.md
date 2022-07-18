@@ -1,40 +1,46 @@
-# React Truffle Box
+# Voting session Dapp
 
-This box comes with everything you need to start using Truffle to write, compile, test, and deploy smart contracts, and interact with them from a React app.
+Projet Dapp avec un front fait en React et un back avec un contrat Solidity.
 
-## Installation
+Le front permet d'intéragir avec le contract par le biais d'une interface web.
 
-First ensure you are in an empty directory.
+Toutes les fonctionnalités du contrat sont utilisable via le front.
 
-Run the `unbox` command using 1 of 2 ways.
+## Composants
 
-```sh
-# Install Truffle globally and run `truffle unbox`
-$ npm install -g truffle
-$ truffle unbox react
-```
+L'interface est découpé en plusieurs composants :
 
-```sh
-# Alternatively, run `truffle unbox` via npx
-$ npx truffle unbox react
-```
+- App => Composant racine qui dispose les sous composants
+- Account => Affiche l'adresse du compte connecté
+- Winner => Affiche la proposal gagnante
+- AdminPanel => Le panneau d'interaction du compte admin
+- VoterPanel => Le panneau d'interaction d'un voter
+- VotersList => La liste des voters enregistrés
+- ProposalsList => La liste des proposals enregistrés
 
-Start the react dev server.
+## Déploiement
 
-```sh
-$ cd client
-$ npm start
-  Starting the development server...
-```
+Actuellement il est possible d'utiliser la Dapp sur le réseau de test Ropsten et sur un ganache lancé en local.
 
-From there, follow the instructions on the hosted React app. It will walk you through using Truffle and Ganache to deploy the `SimpleStorage` contract, making calls to it, and sending transactions to change the contract's state.
+Voici l'adresse du contract sur le réseau Ropsten : 0x62455D36E8135A33B41f04e456c302c1be973695
 
-## FAQ
+Si vous souhaitez déployer vous même le contract sur Ropsten, n'oubliez pas de renommer le fichier `.en-dist` en `.env` et d'y renseigner l'ID de votre node Infura ainsi que la mnemonic de votre metamask
 
-- __How do I use this with Ganache (or any other network)?__
 
-  The Truffle project is set to deploy to Ganache by default. If you'd like to change this, it's as easy as modifying the Truffle config file! Check out [our documentation on adding network configurations](https://trufflesuite.com/docs/truffle/reference/configuration/#networks). From there, you can run `truffle migrate` pointed to another network, restart the React dev server, and see the change take place.
+## Hosting de la Dapp
 
-- __Where can I find more resources?__
+La dapp est propulsée en ligne via l'outil [Surge](https://surge.sh/) à cette URL : [https://smiling-join.surge.sh/](https://smiling-join.surge.sh/)
 
-  This Box is a sweet combo of [Truffle](https://trufflesuite.com) and [Create React App](https://create-react-app.dev). Either one would be a great place to start!
+PS: le nom de domaine est généré aléatoirement
+
+## Version 2
+
+- Architecture React + Store Redux => Bcp plus simple pour la gestion du state (qui est ici laborieuse)
+- Retravailler le design (pour l'instant j'utilise la lib semantic-ui-react)
+- Utiliser d'autre solutions de free hosting : GitHub Pages, Heroku, Netlify (car je ne les ai encore jamais utilisé)
+
+## Version 3
+
+- Pipeline complet de CI/CD
+- Améliorer le smart contract
+- Utiliser d'autres solutions comme Besu
