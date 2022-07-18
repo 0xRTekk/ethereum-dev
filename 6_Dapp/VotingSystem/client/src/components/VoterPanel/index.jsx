@@ -82,12 +82,12 @@ function VoterPanel({ proposals, setProposals, currentPhase, setWinner }) {
   };
 
   const handleVote = async () => {
-    // selectedProposal
     await contract.methods.setVote(parseInt(selectedProposal)).send({ from: accounts[0] });
 
-    const winnerId = await contract.methods.winningProposalID().call({ from: accounts[0] });
-    const winnerProposal = await contract.methods.getOneProposal(parseInt(winnerId)).call({ from: accounts[0] });
-    setWinner(winnerProposal);
+    // const winnerId = await contract.methods.winningProposalID().call({ from: accounts[0] });
+    // const winnerProposal = await contract.methods.getOneProposal(parseInt(winnerId)).call({ from: accounts[0] });
+    // console.log(winnerProposal);
+    // setWinner(winnerProposal);
 
     window.location.reload();
   };

@@ -1,7 +1,10 @@
 import { useState } from "react";
+import { Message } from 'semantic-ui-react';
 
 import { EthProvider } from "./contexts/EthContext";
 
+import Account from "./components/Account";
+import Winner from "./components/Winner";
 import AdminPanel from "./components/AdminPanel";
 import VoterPanel from "./components/VoterPanel";
 import VotersList from "./components/VotersList";
@@ -17,15 +20,19 @@ function App() {
     "ProposalsRegistrationEnded",
     "VotingSessionStarted",
     "VotingSessionEnded",
-    "VotesTallied",
+    // "VotesTallied",
   ];
   const [proposals, setProposals] = useState([]);
   const [winner, setWinner] = useState(null);
-
+  console.log(winner, currentPhase);
   return (
     <EthProvider>
       <div id="App">
         <div className="container">
+          <Account />
+          <hr />
+          <Winner winner={winner} currentPhase={currentPhase} />
+          <hr />
           <AdminPanel currentPhase={currentPhase} setCurrentPhase={setCurrentPhase} phases={phases} />
           <hr />
           <VoterPanel proposals={proposals} setProposals={setProposals} currentPhase={currentPhase} setWinner={setWinner} />
@@ -33,10 +40,6 @@ function App() {
           <VotersList />
           <hr />
           <ProposalsList proposals={proposals} />
-          <hr />
-          {winner !== null && (
-            <div>The winner is : {winner}</div>
-          )}
         </div>
       </div>
     </EthProvider>
