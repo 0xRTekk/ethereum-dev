@@ -3,7 +3,10 @@
 pragma solidity 0.8.14;
 import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 
-
+/// @title A Voting system contract
+/// @author Rémi Sulpice
+/// @notice You can use this contract to use a voting system on the blockchain Ethereum
+/// @dev This contract extends the Ownable contract from OpenZeppelin
 contract Voting is Ownable {
 
     uint8 public winningProposalID;
@@ -46,17 +49,28 @@ contract Voting is Ownable {
 
     // ::::::::::::: GETTERS ::::::::::::: //
 
+    /// @notice Use this function to retreive the voter's datas
+    /// @dev Retreive the datas from the voters mapping
+    /// @param _addr The voter's address
+    /// @return The voter's datas
     function getVoter(address _addr) external onlyVoters view returns (Voter memory) {
         return voters[_addr];
     }
     
+    /// @notice Use this function to retreive the proposal's datas
+    /// @dev Retreive the datas from the proposal array
+    /// @param _id The proposal's id
+    /// @return The proposal's datas
     function getOneProposal(uint _id) external onlyVoters view returns (Proposal memory) {
         return proposalsArray[_id];
     }
 
  
-    // ::::::::::::: REGISTRATION ::::::::::::: // 
+    // ::::::::::::: REGISTRATION ::::::::::::: //
 
+    /// @notice Use this function to add a voter on the whitelist
+    /// @dev Add a voter on the voters mapping. Can be executed only by the owner of the contract. Emit an event  
+    /// @param _addr The voter's address
     function addVoter(address _addr) external onlyOwner {
         require(workflowStatus == WorkflowStatus.RegisteringVoters, 'Voters registration is not open yet');
         require(voters[_addr].isRegistered != true, 'Already registered');
@@ -68,6 +82,12 @@ contract Voting is Ownable {
 
     // ::::::::::::: PROPOSAL ::::::::::::: // 
 
+    /// @notice Use this function to add a proposal
+    /// @dev Add a proposal on the proposal array.
+    /// @dev Can be executed only by a voter of the whitelist.
+    /// @dev We limit the length of the proposals array to avoid DoS gas limit attack
+    /// @dev Emit an event
+    /// @param _desc The proposal's description
     function addProposal(string memory _desc) external onlyVoters {
         // 
         require(proposalsArray.length <= 10, "Proposals list is full");
@@ -83,6 +103,12 @@ contract Voting is Ownable {
 
     // ::::::::::::: VOTE ::::::::::::: //
 
+    /// @notice Use this function to vote for an existing proposal
+    /// @dev Incremente the number of vote for the given proposal.
+    /// @dev Can only be executed by a voter of the whitelist.
+    /// @dev We calcule the winningProposalID here to avoid the Dos Gas Limit attack within the talliedVote function
+    /// @dev Emit an event
+    /// @param _id The proposal's id
     function setVote(uint8 _id) external onlyVoters {
         require(workflowStatus == WorkflowStatus.VotingSessionStarted, 'Voting session havent started yet');
         require(voters[msg.sender].hasVoted != true, 'You have already voted');
@@ -102,24 +128,32 @@ contract Voting is Ownable {
 
     // ::::::::::::: STATE ::::::::::::: //
 
+    /// @notice Use this function to start the proposal registering phase
+    /// @dev Change the WorkflowStatus to RegisteringVoters. Emit an event
     function startProposalsRegistering() external onlyOwner {
         require(workflowStatus == WorkflowStatus.RegisteringVoters, 'Registering proposals cant be started now');
         workflowStatus = WorkflowStatus.ProposalsRegistrationStarted;
         emit WorkflowStatusChange(WorkflowStatus.RegisteringVoters, WorkflowStatus.ProposalsRegistrationStarted);
     }
 
+    /// @notice Use this function to end the proposal registering phase
+    /// @dev Change the WorkflowStatus to ProposalsRegistrationEnded. Emit an event
     function endProposalsRegistering() external onlyOwner {
         require(workflowStatus == WorkflowStatus.ProposalsRegistrationStarted, 'Registering proposals havent started yet');
         workflowStatus = WorkflowStatus.ProposalsRegistrationEnded;
         emit WorkflowStatusChange(WorkflowStatus.ProposalsRegistrationStarted, WorkflowStatus.ProposalsRegistrationEnded);
     }
 
+    /// @notice Use this function to start the voting session phase
+    /// @dev Change the WorkflowStatus to VotingSessionStarted. Emit an event
     function startVotingSession() external onlyOwner {
         require(workflowStatus == WorkflowStatus.ProposalsRegistrationEnded, 'Registering proposals phase is not finished');
         workflowStatus = WorkflowStatus.VotingSessionStarted;
         emit WorkflowStatusChange(WorkflowStatus.ProposalsRegistrationEnded, WorkflowStatus.VotingSessionStarted);
     }
 
+    /// @notice Use this function to end the voting session phase
+    /// @dev Change the WorkflowStatus to VotingSessionEnded. Emit an event
     function endVotingSession() external onlyOwner {
         require(workflowStatus == WorkflowStatus.VotingSessionStarted, 'Voting session havent started yet');
         workflowStatus = WorkflowStatus.VotingSessionEnded;
