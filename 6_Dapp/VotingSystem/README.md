@@ -6,6 +6,10 @@ Le front permet d'intéragir avec le contract par le biais d'une interface web.
 
 Toutes les fonctionnalités du contrat sont utilisable via le front.
 
+## Démo
+
+Voici la [vidéo démo](https://drive.google.com/file/d/1oQXti5CTITNg39qKXX461CJY3x3kq19l/view?usp=sharing) de la Dapp !
+
 ## Composants
 
 L'interface est découpé en plusieurs composants :
