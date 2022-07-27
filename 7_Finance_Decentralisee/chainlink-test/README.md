@@ -44,4 +44,11 @@ Et sur Ethereum, on peut retrouver les rates sur Kovan et Rinkeby :
 
 Il n'est pas possible de faire du random on-chain de manière sécurisé étant donnée que tout est déterministe.
 
-Pour ça, on va utiliser l'outils VRF de chainlink qui va nous permettre de générer du random 
+Pour ça, on va utiliser l'outils VRF de chainlink qui va nous permettre de générer du random si on a un besoin de sécurité élevé (car ça coute des LINK).
+
+On va pour utiliser les contracts VRF.sol et subscription.sol
+
+Au lieu de de faire des tranfert régulier à chaque appel, on va prépayer un contract de subscription. Les LINK qu'on va mettre sur ce contract vont pouvoir être consommés par le contract VRF.
+
+Pour créer une subscription ça se passe [ici](https://vrf.chain.link/new), on rajoute des fonds sur le contract puis on va recup un ID de subscription qu'on va pouvoir renseigner au contract VRF pour valider les Tx.  
+On va recup le contract [Chainlink2.sol](https://github.com/lecascyril/test/blob/main/contracts/chainlink2.sol) et le [déployer](./migrations/2_chainlink-vrf.js) sur rinkeby et recup l'adresse de contract. On en a besoin pour rajouter le contract dans le subscription, ainsi, lorsqu'on demandera un aléatoire, le contract viendra valider ses Tx avec la subscritpion prefunded !
