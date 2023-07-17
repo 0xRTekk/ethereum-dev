@@ -1,0 +1,54 @@
+{
+  "manifestVersion": "3.2",
+  "admin": {
+    "address": "0x0A28900A37Cb28bb88A509bb73687D491298D31e",
+    "txHash": "0x027081303acbb8a3c127f9e55b950b9197fe4913748d68c7f660624c3e990333"
+  },
+  "proxies": [
+    {
+      "address": "0xE4214271Bd322Dd6d2dA343467aa2f27727b5eE0",
+      "txHash": "0xba912fdce7baad18e1f3ad6ae7fc9d95f08da49f694730480e58e6c6e8808f52",
+      "kind": "transparent"
+    }
+  ],
+  "impls": {
+    "4654c37bc655e3cf36ea0e28dae69ef2bc7db665f3643462fccb633da87855da": {
+      "address": "0x7bd43F22167B7f066eeA06b80d992957EdBB413a",
+      "txHash": "0xdb50fb5064860815f7858aa1fac4d6935d023efdaac44451b4a78fcb6f718674",
+      "layout": {
+        "storage": [
+          {
+            "contract": "SimpleStorage1",
+            "label": "number",
+            "type": "t_uint256",
+            "src": "../project:/contracts/SimpleStorage1.sol:12"
+          }
+        ],
+        "types": {
+          "t_uint256": {
+            "label": "uint256"
+          }
+        }
+      }
+    },
+    "bef8add004c793f7da624ac833a7997723f097286d7b1d3506ecf0257b8b8880": {
+      "address": "0xca0d2bA5c08609bF800B2C54Ed5df6E98D2e1348",
+      "txHash": "0xba9bad4171b5176e80a8fb6c69069774a0b30390c98049e43093ca8b91ec8205",
+      "layout": {
+        "storage": [
+          {
+            "contract": "SimpleStorage2",
+            "label": "number",
+            "type": "t_uint256",
+            "src": "../project:/contracts/SimpleStorage2.sol:12"
+          }
+        ],
+        "types": {
+          "t_uint256": {
+            "label": "uint256"
+          }
+        }
+      }
+    }
+  }
+}

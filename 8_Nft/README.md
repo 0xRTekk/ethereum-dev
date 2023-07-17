@@ -1,5 +1,7 @@
 # NFT
 
+## Hashlips art engine
+
 On utilise le [art engine de hashlpis](https://github.com/HashLips/hashlips_art_engine) pour créer notre collection de NFTs.
 
 On doit mettre les calques dans le dossier layout puis venir modifier le fichier `src/config.js`
@@ -76,3 +78,6 @@ contract NFTs is Ownable, ERC721 {
 ```
 
 On peut maintenant checker nos NFT sur [opensea testnet](https://testnets.opensea.io/)
+
+## Upradable
+
